@@ -26,15 +26,15 @@ else
 
 	# following is only for kernels packed with LZO compression
 	LOC1=`grep -P -a -b --only-matching 'LZO\x00' $1 | tail -1 | cut -d: -f 1`
-        LOC1=`expr $LOC1 - 1`
 	if [ $LOC1 ]
 	then
+                LOC1=`expr $LOC1 - 1`
 		echo "LZO compression detected"
 		echo "Unpacking zImage"
 		dd if=$1 bs=$LOC1 skip=1 | lzop -do kernel.Image
 	else
 		# following is only for kernels packed with LZ4 compression
-		LOC1=`grep -P -a -b --only-matching '\x02\x21\x4c\x18' $1 | tail -1 | cut -d: -f 1`
+		LOC1=`grep -P -a -b --only-matching '\x02\x21\x4c\x18' $1 | head -2 | tail -1 | cut -d: -f 1`
 		if [ $LOC1 ]
 		then
 			echo "LZ4 compression detected"
